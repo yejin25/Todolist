@@ -9,6 +9,14 @@ public class Group {
     private int color;
     private Date makeDate;
 
+    public Group() {
+        this.title = "";
+        this.text = "";
+        this.makeDate = new Date();
+        this.color = 0;
+
+    }
+
     public Group(String title, String text, Date makeDate, int color) {
         this.title = title;
         this.text = text;

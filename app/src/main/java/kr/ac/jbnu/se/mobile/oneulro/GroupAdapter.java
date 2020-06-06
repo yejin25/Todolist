@@ -64,8 +64,8 @@ public class GroupAdapter extends BaseAdapter {
 
         if (addGroup != null) {
             ViewHolder holder = (ViewHolder)view.getTag();
-            holder.titleTextView.setText(addGroup.getTitle());
-            holder.descriptionTextView.setText(addGroup.getText());
+            holder.titleTextView.setText(addGroup.getText());
+            holder.descriptionTextView.setText(addGroup.getTitle());
             holder.time.setText(addGroup.getTime());
             holder.date.setText(addGroup.getMonth());
             holder.year.setText(addGroup.getYear());

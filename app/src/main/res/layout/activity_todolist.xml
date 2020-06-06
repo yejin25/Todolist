@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/top_todo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#00A3D2">
+
+        <TextView
+            android:id="@+id/group_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="그룹 이름"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@+id/sand"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/sand"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="menu_list"
+            android:onClick="settings"
+            android:paddingLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/menu" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/text_todo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:layout_marginLeft="5dp"
+            android:hint= "  할 일을 작성해주세요"
+            />
+        <ImageView
+            android:id="@+id/add_todo"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_margin="3dp"
+            android:layout_weight="0.3"
+            android:src="@drawable/plus" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+            <ListView
+                android:id="@+id/todoListView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:divider="#ffffff"/>
+        </ScrollView>
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

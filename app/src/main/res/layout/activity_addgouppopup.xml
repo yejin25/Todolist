@@ -65,7 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text = "Despcription"
+                android:text = "Description"
                 android:layout_marginRight="140dp"
                 />
         <EditText
