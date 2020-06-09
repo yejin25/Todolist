@@ -12,9 +12,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#d15400"
+            android:background="#00A3D2"
             android:gravity="center"
-            android:text="친구 초대하기"
+            android:text="공유 그룹 추가"
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold"/>
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:gravity="center"
-                android:hint="code"
+                android:hint="초대코드를 입력하세요"
                 android:textColor="#495057"
                 android:textSize="15sp" />
 
@@ -55,9 +55,9 @@
                 android:layout_height="40dp"
                 android:background="#00000000"
                 android:gravity="center"
-                android:text="예"
+                android:text="확인"
                 android:layout_weight="0.5"
-                android:textColor="#d15400"
+                android:textColor="#00A3D2"
                 android:textSize="18sp" />
 
             <Button
@@ -66,9 +66,9 @@
                 android:layout_height="40dp"
                 android:background="#00000000"
                 android:gravity="center"
-                android:text="아니오"
+                android:text="취소"
                 android:layout_weight="0.5"
-                android:textColor="#d15400"
+                android:textColor="#00A3D2"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 />

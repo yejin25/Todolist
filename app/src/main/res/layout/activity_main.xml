@@ -36,12 +36,16 @@
         android:paddingLeft="10dp"
         android:src="@drawable/menu" />
 
-        <Button
+
+        <ImageView
             android:id="@+id/gogroup"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="13dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            />
+            android:tint="#FFFFFF"
+            android:src="@drawable/people" />
 
     </RelativeLayout>
 

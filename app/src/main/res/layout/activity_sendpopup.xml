@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="#d15400"
+            android:background="#00A3D2"
             android:gravity="center"
             android:text="친구 초대하기"
             android:textColor="#fff"
@@ -49,29 +49,15 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/yes"
+            <TextView
+                android:id="@+id/copytext"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="#00000000"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
                 android:gravity="center"
-                android:text="예"
-                android:layout_weight="0.5"
-                android:textColor="#d15400"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/no"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="#00000000"
-                android:gravity="center"
-                android:text="아니오"
-                android:layout_weight="0.5"
-                android:textColor="#d15400"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                />
+                android:text="초대코드를 클릭해보세요"
+                android:textColor="#808080"
+                android:textSize="13sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -1,9 +1,15 @@
 package kr.ac.jbnu.se.mobile.oneulro;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,11 +21,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,20 +41,25 @@ import java.util.List;
 
 public class todoActivity extends Activity {
     private static final String TAG = "todoActivity";
+    private static final String NOTIFICATION_CHANNEL_ID = "1006" ;
 
     private ArrayList<Item> todo;
     private ListView mlistView;
     private ItemAdapter mAdapter;
     private ImageView add_todo;
+    private ImageView sendCode;
     private EditText text_todo;
+    private TextView group_title;
     private int position;
     private String index;
     private String sharedIndex;
-    private Button sendCode;
     private CheckBox check;
     private View v;
+    private int delete_position;
 
+    private String title;
     private String uid = LoginData.firebaseAuth.getUid();
+    private String name = LoginData.firebaseAuth.getCurrentUser().getDisplayName();
     private ArrayList<String> item_key = new ArrayList<>();
     private FirebaseDatabase mDatabase;
     private DatabaseReference databaseReference;
@@ -83,12 +96,27 @@ public class todoActivity extends Activity {
         mlistView = (ListView) findViewById(R.id.todoListView);
         add_todo = (ImageView) findViewById(R.id.add_todo);
         text_todo = (EditText) findViewById(R.id.text_todo);
-        sendCode = (Button) findViewById(R.id.code);
+        sendCode = (ImageView) findViewById(R.id.code);
         check = (CheckBox) findViewById(R.id.check);
+        group_title = (TextView) findViewById(R.id.group_title);
 
         mAdapter = new ItemAdapter(todo);
 
         mlistView.setAdapter(mAdapter);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Group titleData = dataSnapshot.getValue(Group.class);
+                    title = titleData.getText();
+                    Log.d("TAG","---title---"+title);
+                    group_title.setText(title);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
 
         loadItem();
 
@@ -99,6 +127,7 @@ public class todoActivity extends Activity {
                 mAdapter.notifyDataSetChanged();
                 saveItem(todoItem);
                 text_todo.setText("");
+                notificationADD();
             }
         });
 
@@ -136,6 +165,7 @@ public class todoActivity extends Activity {
                 builder.setTitle("ToDo 삭제하기");
                 builder.setMessage("todo list를 삭제하시겠습니까?");
                 v = view;
+                delete_position = position;
 
                 builder.setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override
@@ -143,18 +173,17 @@ public class todoActivity extends Activity {
                         int count;
                         count = mAdapter.getCount();
                         if (count > 0) {
-                            final int position = mlistView.getPositionForView((View) v.getParent());
-                            Log.d("TAG", "--this----" + position);
-                            Item item = todo.get(position);
+                            Log.d("TAG", "--this----" + delete_position);
+                            Item item = todo.get(delete_position);
 
-                            if (position > -1 && position < count) {
+                            if (delete_position > -1 && delete_position < count) {
 
                                 todo.remove(item);
                                 mlistView.clearChoices();
-                                databaseReference.child("TODO").child(item_key.get(position)).removeValue();
+                                databaseReference.child("TODO").child(item_key.get(delete_position)).removeValue();
                                 mAdapter.notifyDataSetChanged();
 
-                                Toast.makeText(todoActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(todoActivity.this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -208,4 +237,43 @@ public class todoActivity extends Activity {
         });
 
     }
+    private void notificationADD() {
+
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK) ;
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,  PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
+                .setContentTitle("ToDoList  오늘로")
+                .setContentText( name + "님이 " + title + " 리스트에 " + "ToDo 를 추가했습니다")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+            CharSequence channelName  = "todolist 추가";
+            String description = "새로운 todo 가 리스트에 추가됨";
+
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName , importance);
+            channel.setDescription(description);
+
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
+
+        }else builder.setSmallIcon(R.mipmap.ic_launcher);
+
+        assert notificationManager != null;
+        notificationManager.notify(1234, builder.build());
+    }
+
+
 }

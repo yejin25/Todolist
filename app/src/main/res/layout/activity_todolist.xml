@@ -18,27 +18,24 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="그룹 이름"
+            android:layout_marginLeft="20dp"
             android:textColor="#FFFFFF"
-            android:layout_toRightOf="@+id/sand"
             android:textSize="18dp"
             android:textStyle="bold" />
 
+
         <ImageView
-            android:id="@+id/sand"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/code"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:contentDescription="menu_list"
-            android:onClick="settings"
-            android:paddingLeft="10dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/menu" />
-        <Button
-            android:id="@+id/code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/group_title"
-            />
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/invite"
+            android:tint="#FFFFFF"/>
+
 
     </RelativeLayout>
     <LinearLayout

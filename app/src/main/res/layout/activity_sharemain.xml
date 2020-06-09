@@ -27,15 +27,6 @@
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="menu_list"
-                android:onClick="settings"
-                android:paddingLeft="10dp"
-                android:src="@drawable/menu" />
-
             <Button
                 android:id="@+id/input"
                 android:layout_width="50dp"

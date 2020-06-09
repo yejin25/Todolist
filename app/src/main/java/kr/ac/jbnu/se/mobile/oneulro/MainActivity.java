@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView add_btn;
     private TextView category;
     private ListView listView;
-    private Button inputCode;
+    private ImageView go_Group;
     private GroupAdapter adapter;
     private FirebaseDatabase database =FirebaseDatabase.getInstance();
     private DatabaseReference  databaseRef = database.getReference();
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         add_btn = (ImageView) findViewById(R.id.add_btn);
         listView = (ListView) findViewById(R.id.listView);
         category = (TextView) findViewById(R.id.category);
-        inputCode = (Button) findViewById(R.id.gogroup);
+        go_Group = (ImageView) findViewById(R.id.gogroup);
 
         groups = new ArrayList<>();
 
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        inputCode.setOnClickListener(new View.OnClickListener() {
+        go_Group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),shareMainActivity.class);
