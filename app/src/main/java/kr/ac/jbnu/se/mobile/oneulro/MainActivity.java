@@ -38,15 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REQUERST_CODE_NEW_GROUP = 1000;
     private List<Group> groups;
-    public static List<String> key;
+    public static ArrayList<String> key = new ArrayList<>();
     private ImageView add_btn;
     private TextView category;
     private ListView listView;
+    private Button inputCode;
     private GroupAdapter adapter;
     private FirebaseDatabase database =FirebaseDatabase.getInstance();
     private DatabaseReference  databaseRef = database.getReference();
+    private String uid = LoginData.firebaseAuth.getUid();
 
-    String uid = LoginData.firebaseAuth.getUid();
+    public String index;
+    public static int code_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,7 @@ public class MainActivity extends AppCompatActivity {
         add_btn = (ImageView) findViewById(R.id.add_btn);
         listView = (ListView) findViewById(R.id.listView);
         category = (TextView) findViewById(R.id.category);
-
-        key = new ArrayList<>();
+        inputCode = (Button) findViewById(R.id.gogroup);
 
         groups = new ArrayList<>();
 
@@ -81,8 +83,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(),todoActivity.class);
-                int listPosition = listView.getPositionForView((View) view.getParent());
-                intent.putExtra("position",listPosition);
+                //int listPosition = listView.getPositionForView((View) view.getParent());
+                code_index = position;
+                index = key.get(position);
+                intent.putExtra("index", index);
+                startActivity(intent);
+            }
+        });
+
+        inputCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),shareMainActivity.class);
                 startActivity(intent);
             }
         });
@@ -120,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 int color = data.getIntExtra("color", 123456);
                 Date currentTime = Calendar.getInstance().getTime();
                 Group group = new Group(description,title,currentTime,color);
+
+                Log.d("Tag","------------"+title);
                 saveGroup(group);
                 //String id = LoginData.firebaseAuth.getCurrentUser().getEmail();
               //  String result = id.substring(id.lastIndexOf("@"));
@@ -143,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     if (childDataSnapshot.getKey() != null) {
                         Group data = childDataSnapshot.getValue(Group.class);
-                        key.add(0,childDataSnapshot.getKey());
-                        groups.add(0,data);
+                        key.add(childDataSnapshot.getKey());
+                        groups.add(data);
 //                        databaseRef.child("Group").child(uid).child(childDataSnapshot.getKey()).addListenerForSingleValueEvent((
 //                                new ValueEventListener() {
 //                                    @Override

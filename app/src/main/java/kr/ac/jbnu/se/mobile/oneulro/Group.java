@@ -8,13 +8,13 @@ public class Group {
     private String text;
     private int color;
     private Date makeDate;
+    private int position;
 
     public Group() {
         this.title = "";
         this.text = "";
         this.makeDate = new Date();
         this.color = 0;
-
     }
 
     public Group(String title, String text, Date makeDate, int color) {

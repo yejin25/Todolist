@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/group_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:text="그룹 이름"
@@ -33,6 +33,12 @@
             android:paddingLeft="10dp"
             android:layout_marginRight="20dp"
             android:src="@drawable/menu" />
+        <Button
+            android:id="@+id/code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/group_title"
+            />
 
     </RelativeLayout>
     <LinearLayout

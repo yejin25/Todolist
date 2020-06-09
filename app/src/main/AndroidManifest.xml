@@ -19,7 +19,14 @@
         <activity android:name=".MainActivity"
             />
         <activity android:name=".addGroupPopup" />
-        <activity android:name=".todoActivity"/>
+        <activity android:name=".todoActivity"
+            />
+        <activity android:name=".codePopup"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".inputCodePopup"
+            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".shareMainActivity"/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

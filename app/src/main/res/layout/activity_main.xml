@@ -6,12 +6,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimary">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/nb_tasks"
         android:layout_width="match_parent"
@@ -32,7 +35,16 @@
         android:onClick="settings"
         android:paddingLeft="10dp"
         android:src="@drawable/menu" />
+
+        <Button
+            android:id="@+id/gogroup"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            />
+
     </RelativeLayout>
+
 
 
     <RelativeLayout

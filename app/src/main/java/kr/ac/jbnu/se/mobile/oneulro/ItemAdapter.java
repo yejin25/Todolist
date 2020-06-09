@@ -4,12 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 public class ItemAdapter extends BaseAdapter {
     List<Item> todo;
+    View view;
 
     ItemAdapter(List<Item> todo){
         this.todo = todo;
@@ -18,6 +21,7 @@ public class ItemAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView id;
         TextView text;
+        CheckBox check;
        // TextView status;
     }
 
@@ -38,7 +42,7 @@ public class ItemAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
+        view = convertView;
         if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             view = inflater.inflate(R.layout.todo_item, null);
@@ -46,6 +50,7 @@ public class ItemAdapter extends BaseAdapter {
             ItemAdapter.ViewHolder holder = new ItemAdapter.ViewHolder();
             holder.id = (TextView)view.findViewById(R.id.todoId);
             holder.text = (TextView)view.findViewById(R.id.todoText);
+            holder.check = (CheckBox)view.findViewById(R.id.check);
          //   holder.status = (TextView)view.findViewById(R.id.time);
             view.setTag(holder);
         }
@@ -56,7 +61,16 @@ public class ItemAdapter extends BaseAdapter {
             ItemAdapter.ViewHolder holder = (ItemAdapter.ViewHolder)view.getTag();
             holder.id.setText(addItem.getId());
             holder.text.setText(addItem.getText());
+            holder.check.setChecked(Boolean.valueOf(addItem.getStatus()));
         }
+
+        ItemAdapter.ViewHolder holder = (ItemAdapter.ViewHolder)view.getTag();
+        holder.check.setClickable(false);
+        holder.check.setFocusable(false);
+
         return view;
     }
+
+
+
 }
