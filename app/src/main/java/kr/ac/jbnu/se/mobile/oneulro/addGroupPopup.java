@@ -27,6 +27,7 @@ public class addGroupPopup extends Activity {
     private EditText title;
     private int pickColor;
 
+
     protected void onCreate(Bundle saveInstanceStatus) {
         super.onCreate(saveInstanceStatus);
 

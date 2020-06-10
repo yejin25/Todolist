@@ -21,18 +21,22 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="공유 그룹"
+                android:fontFamily="@font/reco"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:background="#00A3D2"
                 android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
-            <Button
-                android:id="@+id/input"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+            <ImageView
+                android:id="@+id/addshared"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="13dp"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                />
+                android:tint="#FFFFFF"
+                android:src="@drawable/deohagi" />
 
         </RelativeLayout>
 

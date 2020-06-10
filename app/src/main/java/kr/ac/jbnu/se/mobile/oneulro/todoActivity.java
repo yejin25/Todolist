@@ -50,10 +50,10 @@ public class todoActivity extends Activity {
     private ImageView sendCode;
     private EditText text_todo;
     private TextView group_title;
+
     private int position;
     private String index;
     private String sharedIndex;
-    private CheckBox check;
     private View v;
     private int delete_position;
 
@@ -63,6 +63,9 @@ public class todoActivity extends Activity {
     private ArrayList<String> item_key = new ArrayList<>();
     private FirebaseDatabase mDatabase;
     private DatabaseReference databaseReference;
+
+    private Boolean isShared = false;
+    private Boolean turn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +83,11 @@ public class todoActivity extends Activity {
 
         mDatabase = FirebaseDatabase.getInstance();
 
+        turn = MainActivity.turn;
+
         if(sharedIndex != null){
         databaseReference = mDatabase.getReference("Group").child(uid).child(sharedIndex);
+        isShared = true;
         }
         else{
             databaseReference = mDatabase.getReference("Group").child(uid).child(index);
@@ -97,7 +103,6 @@ public class todoActivity extends Activity {
         add_todo = (ImageView) findViewById(R.id.add_todo);
         text_todo = (EditText) findViewById(R.id.text_todo);
         sendCode = (ImageView) findViewById(R.id.code);
-        check = (CheckBox) findViewById(R.id.check);
         group_title = (TextView) findViewById(R.id.group_title);
 
         mAdapter = new ItemAdapter(todo);
@@ -127,7 +132,7 @@ public class todoActivity extends Activity {
                 mAdapter.notifyDataSetChanged();
                 saveItem(todoItem);
                 text_todo.setText("");
-                notificationADD();
+                notificationADD(turn, isShared);
             }
         });
 
@@ -138,6 +143,7 @@ public class todoActivity extends Activity {
                 startActivity(intent);
             }
         });
+
 
         mlistView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -200,14 +206,8 @@ public class todoActivity extends Activity {
         });
     }
 
-    /*Toast.makeText(todoActivity.this, "클.", Toast.LENGTH_SHORT).show();
-                final int position = mlistView.getPositionForView((View) v.getParent());
-                todo.get(position).setStatus(Item.Status.DONE);
-                databaseReference.child("TODO").child(item_key.get(position)).child("status").setValue(todo.get(position).getStatus());*/
-
 
         private void saveItem(Item todo){
-        Integer intUnixTime = (int) System.currentTimeMillis();
 
         databaseReference.child("TODO").push().setValue(todo);
     }
@@ -237,42 +237,45 @@ public class todoActivity extends Activity {
         });
 
     }
-    private void notificationADD() {
+    private void notificationADD(Boolean turn, Boolean isShared) {
 
-        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        if (turn && isShared) {
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK) ;
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,  PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
-                .setContentTitle("ToDoList  오늘로")
-                .setContentText( name + "님이 " + title + " 리스트에 " + "ToDo 를 추가했습니다")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
+                    .setContentTitle("ToDoList  오늘로")
+                    .setContentText(name + "님이 " + title + " 리스트에 " + "ToDo 를 추가했습니다")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            builder.setSmallIcon(R.drawable.ic_launcher_foreground);
-            CharSequence channelName  = "todolist 추가";
-            String description = "새로운 todo 가 리스트에 추가됨";
+                builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+                CharSequence channelName = "todolist 추가";
+                String description = "새로운 todo 가 리스트에 추가됨";
 
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+                int importance = NotificationManager.IMPORTANCE_HIGH;
 
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName , importance);
-            channel.setDescription(description);
+                NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, importance);
+                channel.setDescription(description);
+
+                assert notificationManager != null;
+                notificationManager.createNotificationChannel(channel);
+
+            } else builder.setSmallIcon(R.mipmap.ic_launcher);
 
             assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
-
-        }else builder.setSmallIcon(R.mipmap.ic_launcher);
-
-        assert notificationManager != null;
-        notificationManager.notify(1234, builder.build());
+            notificationManager.notify(1234, builder.build());
+        }
     }
 
 

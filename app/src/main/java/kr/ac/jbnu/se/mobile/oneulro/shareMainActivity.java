@@ -30,7 +30,8 @@ public class shareMainActivity extends AppCompatActivity {
     private ListView listView;
     private GroupAdapter adapter;
     private List<Group> shareGroup;
-    private Button inputCode;
+    private ImageView inputCode;
+    private List<String> people;
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference databaseRef = database.getReference();
@@ -50,11 +51,12 @@ public class shareMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sharemain);
 
         listView = (ListView) findViewById(R.id.sharedlistView);
-        inputCode = (Button) findViewById(R.id.input);
+        inputCode = (ImageView) findViewById(R.id.addshared);
 
         uid = LoginData.firebaseAuth.getUid();
 
         shareGroup = new ArrayList<>();
+        people = new ArrayList<>();
 
         adapter = new GroupAdapter(shareGroup);
 
@@ -68,8 +70,8 @@ public class shareMainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), todoActivity.class);
                 //int listPosition = listView.getPositionForView((View) view.getParent());
                 index = key.get(position);
-                intent.putExtra("sharedIndex",index);
-                Log.d("TAG", "-----000----"+index);
+                intent.putExtra("sharedIndex", index);
+                Log.d("TAG", "-----000----" + index);
                 startActivity(intent);
             }
         });
@@ -97,11 +99,11 @@ public class shareMainActivity extends AppCompatActivity {
                 databaseRef.child("SharedGroup").child(uid).child(key.get(position)).removeValue();
                 adapter.notifyDataSetChanged();
 
-                Toast.makeText(shareMainActivity.this, "삭제되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(shareMainActivity.this, "삭제되었습니다", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -123,13 +125,13 @@ public class shareMainActivity extends AppCompatActivity {
         databaseRef.child("Group").child(input_uid).child(input_unixTime).addValueEventListener((new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 shareGroup.clear();
                 Group group = dataSnapshot.getValue(Group.class);
+
                 shareGroup.add(group);
 
-                Integer intUnixTime = (int) System.currentTimeMillis();
-                databaseRef.child("SharedGroup").child(uid).child(input_unixTime).setValue(group);
-
+                databaseRef.child("SharedGroup").child(input_uid).child(input_unixTime).setValue(group);
                 adapter.notifyDataSetChanged();
             }
             @Override
@@ -148,6 +150,7 @@ public class shareMainActivity extends AppCompatActivity {
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     if (childDataSnapshot.getKey() != null) {
                         Group data = childDataSnapshot.getValue(Group.class);
+
                         key.add(childDataSnapshot.getKey());
                         shareGroup.add(data);
                     }
@@ -162,4 +165,5 @@ public class shareMainActivity extends AppCompatActivity {
         }));
 
     }
+
 }
