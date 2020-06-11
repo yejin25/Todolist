@@ -1,14 +1,11 @@
 package kr.ac.jbnu.se.mobile.oneulro;
 
-import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GroupAdapter extends BaseAdapter {
@@ -45,6 +42,7 @@ public class GroupAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+
         if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             view = inflater.inflate(R.layout.list_item, null);
@@ -71,6 +69,7 @@ public class GroupAdapter extends BaseAdapter {
             holder.year.setText(addGroup.getYear());
             holder.color.setBackgroundColor(addGroup.getColor());
         }
+
         return view;
     }
 

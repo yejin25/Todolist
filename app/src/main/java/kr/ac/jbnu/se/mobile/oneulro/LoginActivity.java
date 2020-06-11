@@ -21,10 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
-    // private FirebaseAuth mAuth = null;
-    //private GoogleSignInClient LoginData.mGoogleSignInClient;
+
     private static final int RC_SIGN_IN = 9001;
-    private static boolean isFirstRun = true;
 
     private SignInButton signInButton;
 

@@ -8,25 +8,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import android.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.database.DataSnapshot;
@@ -35,15 +30,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class todoActivity extends Activity {
-    private static final String TAG = "todoActivity";
     private static final String NOTIFICATION_CHANNEL_ID = "1006" ;
 
     private ArrayList<Item> todo;
+    private ArrayList<String> item_key = new ArrayList<>();
+
     private ListView mlistView;
     private ItemAdapter mAdapter;
     private ImageView add_todo;
@@ -54,18 +49,18 @@ public class todoActivity extends Activity {
     private int position;
     private String index;
     private String sharedIndex;
-    private View v;
     private int delete_position;
-
     private String title;
     private String uid = LoginData.firebaseAuth.getUid();
     private String name = LoginData.firebaseAuth.getCurrentUser().getDisplayName();
-    private ArrayList<String> item_key = new ArrayList<>();
+
     private FirebaseDatabase mDatabase;
     private DatabaseReference databaseReference;
 
     private Boolean isShared = false;
     private Boolean turn = false;
+
+    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,29 +68,22 @@ public class todoActivity extends Activity {
         setContentView(R.layout.activity_todolist);
 
         Intent intent = getIntent();
+
         position = intent.getIntExtra("position", 0);
         index = intent.getStringExtra("index");
         sharedIndex = intent.getStringExtra("sharedIndex");
-
-        Log.d("TAG","---^^----"+sharedIndex);
-        Log.d("TAG","---^^!----"+index);
-//        sharedPosition = intent.getIntExtra("sharedPosition",0);
 
         mDatabase = FirebaseDatabase.getInstance();
 
         turn = MainActivity.turn;
 
         if(sharedIndex != null){
-        databaseReference = mDatabase.getReference("Group").child(uid).child(sharedIndex);
-        isShared = true;
+        databaseReference = mDatabase.getReference("Group").child(shareMainActivity.uidKey.get(position)).child(sharedIndex);
+            isShared = true;
         }
         else{
             databaseReference = mDatabase.getReference("Group").child(uid).child(index);
         }
-
-        //.child(MainActivity.key.get(position))
-
-//        databaseRef = mDatabase.getReference("SharedGroup").child(uid).child(shareMainActivity.key.get(sharedPosition));
 
         todo = new ArrayList<>();
 
@@ -113,26 +101,26 @@ public class todoActivity extends Activity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Group titleData = dataSnapshot.getValue(Group.class);
-                    title = titleData.getText();
-                    Log.d("TAG","---title---"+title);
-                    group_title.setText(title);
+
+                        title = titleData.getText();
+                if(titleData != null) {
+                        group_title.setText(title);
+                    }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
-
         loadItem();
 
         add_todo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Item todoItem = new Item(LoginData.firebaseAuth.getCurrentUser().getDisplayName(), text_todo.getText().toString(), MainActivity.key.get(position), "false");
+                Item todoItem = new Item(LoginData.firebaseAuth.getCurrentUser().getDisplayName(), text_todo.getText().toString(), "false");
                 mAdapter.notifyDataSetChanged();
                 saveItem(todoItem);
                 text_todo.setText("");
-                notificationADD(turn, isShared);
             }
         });
 
@@ -206,25 +194,40 @@ public class todoActivity extends Activity {
         });
     }
 
-
-        private void saveItem(Item todo){
+    private void saveItem(Item todo){
 
         databaseReference.child("TODO").push().setValue(todo);
+
+            databaseReference.child("TODO").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    notificationADD(turn, isShared);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
     }
 
     private void loadItem(){
+
         databaseReference.child("TODO").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 item_key.clear();
                 todo.clear();
+
                 for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                     if (childDataSnapshot.getKey() != null) {
                         Item data = childDataSnapshot.getValue(Item.class);
+
                         item_key.add(childDataSnapshot.getKey());
-                        Log.d("TAG","-------"+childDataSnapshot.getKey());
                         todo.add(data);
+
                         mAdapter.notifyDataSetChanged();
                     }
                 }
@@ -252,7 +255,7 @@ public class todoActivity extends Activity {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_foreground))
                     .setContentTitle("ToDoList  오늘로")
-                    .setContentText(name + "님이 " + title + " 리스트에 " + "ToDo 를 추가했습니다")
+                    .setContentText(name + "님이 " + title + " 리스트에 " + "ToDo 를 업데이트 했습니다")
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
@@ -277,6 +280,5 @@ public class todoActivity extends Activity {
             notificationManager.notify(1234, builder.build());
         }
     }
-
 
 }

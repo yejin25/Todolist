@@ -2,19 +2,13 @@ package kr.ac.jbnu.se.mobile.oneulro;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -25,8 +19,8 @@ public class addGroupPopup extends Activity {
     private Button confirm;
     private EditText description;
     private EditText title;
-    private int pickColor;
 
+    private int pickColor;
 
     protected void onCreate(Bundle saveInstanceStatus) {
         super.onCreate(saveInstanceStatus);
@@ -65,6 +59,7 @@ public class addGroupPopup extends Activity {
         });
 
     }
+
     private void openColorPicker(){
         ColorPicker colorPicker = new ColorPicker(this);
         ArrayList<String> colors = new ArrayList<>();
